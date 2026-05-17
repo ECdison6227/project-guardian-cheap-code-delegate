@@ -50,7 +50,7 @@ chmod +x install.sh scripts/validate.sh skills/cheap-code-delegate/scripts/*.sh 
 ./install.sh --help >/dev/null
 ./install.sh --dry-run >/dev/null
 skills/cheap-code-delegate/scripts/cheap_delegate.sh --help >/dev/null
-CHEAP_CODE_CMD=cat skills/cheap-code-delegate/scripts/cheap_delegate.sh --mode readonly --dry-run --task "Summarize repository commands." >/dev/null
+env CHEAP_CODE_CMD=cat skills/cheap-code-delegate/scripts/cheap_delegate.sh --mode readonly --dry-run --task "Summarize repository commands." >/dev/null
 skills/cheap-code-delegate/scripts/claude_skill_inventory.sh >/dev/null
 skills/project-guardian/scripts/project_guardian.sh --help >/dev/null
 skills/project-guardian/scripts/project_guardian.sh status >/dev/null
