@@ -1,0 +1,4 @@
+display_name: Project Guardian
+short_description: Manage project memory, resume state, git status, and safe checkpoints.
+default_prompt: Resume this project from memory, check git status, and prepare a safe work checkpoint.
+

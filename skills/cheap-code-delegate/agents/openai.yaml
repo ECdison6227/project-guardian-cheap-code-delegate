@@ -1,0 +1,4 @@
+display_name: Cheap Code Delegate
+short_description: Delegate low-risk mechanical coding work to Claude Code/MiMo with Codex review.
+default_prompt: Classify this engineering task, search for reusable Claude Skills, and delegate only safe mechanical subtasks.
+
