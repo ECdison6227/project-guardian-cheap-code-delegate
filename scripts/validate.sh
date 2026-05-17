@@ -14,10 +14,12 @@ pass() {
 }
 
 required_files=(
+  .github/workflows/validate.yml
   README.md
   LICENSE
   install.sh
   docs/usage.md
+  docs/assets/workflow.svg
   skills/cheap-code-delegate/SKILL.md
   skills/cheap-code-delegate/scripts/cheap_delegate.sh
   skills/cheap-code-delegate/scripts/claude_skill_inventory.sh
