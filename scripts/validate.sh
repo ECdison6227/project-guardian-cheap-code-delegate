@@ -15,6 +15,7 @@ pass() {
 
 required_files=(
   README.md
+  LICENSE
   install.sh
   docs/usage.md
   skills/cheap-code-delegate/SKILL.md
@@ -61,4 +62,3 @@ else
 fi
 
 echo "Validation complete."
-
