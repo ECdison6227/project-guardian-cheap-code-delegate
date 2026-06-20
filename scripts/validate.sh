@@ -54,6 +54,18 @@ env CHEAP_CODE_CMD=cat skills/cheap-code-delegate/scripts/cheap_delegate.sh --mo
 skills/cheap-code-delegate/scripts/claude_skill_inventory.sh >/dev/null
 skills/project-guardian/scripts/project_guardian.sh --help >/dev/null
 skills/project-guardian/scripts/project_guardian.sh status >/dev/null
+
+# Smoke test init + checkpoint in a temp directory
+tmpdir="$(mktemp -d)"
+cd "$tmpdir"
+"$repo_root/skills/project-guardian/scripts/project_guardian.sh" init --task "validate" >/dev/null
+[[ -d .git ]] || fail "project-guardian init did not create .git"
+[[ -f .ai/state.json ]] || fail "project-guardian init did not create .ai/state.json"
+echo "change" > change.txt
+"$repo_root/skills/project-guardian/scripts/project_guardian.sh" checkpoint --summary "validate checkpoint" >/dev/null
+[[ -n "$(git log --oneline -1)" ]] || fail "project-guardian checkpoint did not commit"
+cd "$repo_root"
+rm -rf "$tmpdir"
 pass "script smoke tests passed"
 
 if command -v shellcheck >/dev/null 2>&1; then

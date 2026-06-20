@@ -1,6 +1,6 @@
 ---
 name: project-guardian
-description: Use when starting, resuming, modifying, checkpointing, or ending a software, documentation, paper, or project work session to manage project memory under .ai/, inspect git status safely, preserve context, and avoid unsafe git or production actions.
+description: Use when starting, resuming, modifying, checkpointing, or ending a software, documentation, paper, or project work session to manage project memory under .ai/, enforce git discipline, preserve context, and avoid unsafe git or production actions.
 ---
 
 # Project Guardian
@@ -19,19 +19,18 @@ Use this skill at project boundaries:
 
 - Maintain project memory in `.ai/memory/`.
 - Maintain machine-readable state in `.ai/state.json`.
-- Check branch and git status.
+- **Enforce git discipline**: initialize, stage, and commit automatically. Do not just mention git—run it.
 - Preserve branch safety.
 - Summarize changed files.
-- Ask before git initialization, branch creation, staging, committing, hooks, or skill maintenance.
-- Never push automatically.
+- Never push, reset, clean, deploy, or run destructive commands automatically.
 
 ## Start or Resume
 
 1. Check whether `.ai/state.json` exists.
 2. Read `.ai/memory/` files if they exist.
 3. Check `git status --short --branch`.
-4. If not a git repo, ask before `git init`.
-5. If on `main` or `master`, suggest an `ai/<task>` branch, but ask before creating it.
+4. **If not a git repo, run `git init` automatically.**
+5. If on `main` or `master`, suggest an `ai/<task>` branch to the user, but do not create it without confirmation.
 6. Produce a concise resume summary before doing new work.
 
 Helper:
@@ -58,21 +57,25 @@ The helper creates:
 - `.ai/memory/TODO.md`
 - `.ai/memory/PAPER_CONTEXT.md`
 
-It does not run `git init`.
+It also runs `git init` if the directory is not already a git repository.
 
 ## After Edits
 
 1. Run git status and a diff summary.
 2. Summarize changed files.
 3. If useful, use `cheap-code-delegate` for a low-cost checkpoint draft.
-4. Ask before writing a memory checkpoint unless checkpointing was explicitly requested.
-5. Ask before `git add` or `git commit`.
-6. Never push automatically.
+4. **Write a memory checkpoint automatically.**
+5. **Run `git add -A` and `git commit -m "checkpoint: <summary>"` automatically.**
+6. Do not push unless the user explicitly asks or you pass `--push`.
 
 Helper:
 
 ```bash
+# Auto-commit locally
 $HOME/.agents/skills/project-guardian/scripts/project_guardian.sh checkpoint --summary "..."
+
+# Auto-commit and push (requires explicit intent)
+$HOME/.agents/skills/project-guardian/scripts/project_guardian.sh checkpoint --summary "..." --push
 ```
 
 ## Paper Projects
@@ -83,9 +86,18 @@ If the project is a paper or thesis:
 - Track abstract, introduction, related work, method, experiments, limitations, conclusion, references, figures, tables, and equations.
 - After edits, remind the user to check cross-section consistency, citations, and numbering.
 
-## Forbidden Automatic Actions
+## Automatic Actions
 
-Never run automatically:
+Run automatically:
+
+- `git init` when the directory is not a git repository.
+- `git add -A` when checkpointing.
+- `git commit` when checkpointing.
+- Writing `.ai/memory` checkpoints.
+
+## Require Explicit User Confirmation
+
+Do not run automatically:
 
 - `git push`
 - `git reset`
@@ -94,16 +106,7 @@ Never run automatically:
 - `rm -rf`
 - deployment
 - production commands
-
-Require explicit user confirmation:
-
-- `git init`
-- creating branches
-- `git add`
-- `git commit`
-- modifying project `AGENTS.md` or `CLAUDE.md`
-- creating/updating Claude Skills
-- enabling hooks
+- creating branches other than the auto-suggested `ai/<task>` branch
 
 ## References
 
@@ -112,4 +115,3 @@ Load these only when needed:
 - `references/memory-schema.md`: `.ai/` file responsibilities.
 - `references/git-safety.md`: safe git workflow.
 - `references/paper-projects.md`: paper memory guidance.
-

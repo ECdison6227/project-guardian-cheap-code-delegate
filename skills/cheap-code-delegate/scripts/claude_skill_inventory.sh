@@ -5,9 +5,18 @@ usage() {
   cat <<'EOF'
 Usage: claude_skill_inventory.sh [--json]
 
-Lists Claude Code skills from:
+Lists Claude Code / Codex / Trae skills from default directories or SKILL_ROOTS.
+
+Default directories:
   .claude/skills
   $HOME/.claude/skills
+  $HOME/.codex/skills
+  $HOME/.trae/skills
+  $HOME/.trae-cn/skills
+  $HOME/.agents/skills
+
+Override with a colon-separated list:
+  SKILL_ROOTS="/path/a:/path/b" claude_skill_inventory.sh
 
 This command is read-only.
 EOF
@@ -33,8 +42,16 @@ while [[ $# -gt 0 ]]; do
 done
 
 roots=()
-[[ -d ".claude/skills" ]] && roots+=(".claude/skills")
-[[ -d "${HOME}/.claude/skills" ]] && roots+=("${HOME}/.claude/skills")
+if [[ -n "${SKILL_ROOTS:-}" ]]; then
+  IFS=':' read -r -a roots <<< "$SKILL_ROOTS"
+else
+  [[ -d ".claude/skills" ]] && roots+=(".claude/skills")
+  [[ -d "${HOME}/.claude/skills" ]] && roots+=("${HOME}/.claude/skills")
+  [[ -d "${HOME}/.codex/skills" ]] && roots+=("${HOME}/.codex/skills")
+  [[ -d "${HOME}/.trae/skills" ]] && roots+=("${HOME}/.trae/skills")
+  [[ -d "${HOME}/.trae-cn/skills" ]] && roots+=("${HOME}/.trae-cn/skills")
+  [[ -d "${HOME}/.agents/skills" ]] && roots+=("${HOME}/.agents/skills")
+fi
 
 if [[ ${#roots[@]} -eq 0 ]]; then
   if [[ "$json" == true ]]; then
